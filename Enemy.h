@@ -2,17 +2,23 @@
 #include <iostream>
 using namespace std;
 
+// Forward declaration of Hero class
+class Hero;
+
 class Enemy {
 private:
     string name;
-    int level;
     int health;
     int strength;
+    int dropExp;
 
 public:
-    Enemy(const string& name, int level, int health, int strength);
-    ~Enemy(); // Destructor declaration
+    Enemy(const string& name, int health, int strength, int dropExp);
+    ~Enemy();
     void displayStats() const;
     void takeDamage(int damage);
-    void attack(Enemy& target);
+    void attack(Hero& target);
+    int getHealth() const;
+    string getName() const;
+    int getDropExp() const; 
 };
