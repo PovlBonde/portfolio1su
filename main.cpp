@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sqlite3.h>
 #include <thread> // Add this include for std::this_thread::sleep_for
 #include <chrono> // Add this include for std::chrono::seconds
 #include "Hero.h"
@@ -77,7 +78,7 @@ int main() {
 
     cout << endl;
 
-    selectedHero.displayStats(); // Use the selected Hero object
+    selectedHero.displayStats();
 
     cout << endl;
 
@@ -112,64 +113,93 @@ int main() {
                 return 0;
             default:
                 cout << "Invalid choice. Exiting game..." << endl;
-                return 0; // Exit the game on invalid input
+                continue; // Restart the loop on invalid input
         }
         break;
     }
 
-    cout << endl;
+    cout << endl;    
 
-    cout << "Select an enemy to fight:" << endl;
+    while (!enemies.empty() && selectedHero.getHealth() > 0) {
+        cout << "Select an enemy to fight:" << endl;
+    
+        for (int i = 0; i < enemies.size(); ++i) {
+            cout << i << ". " << enemies[i].getName()
+                 << " - Health: " << enemies[i].getHealth()
+                 << ", Strength: " << enemies[i].getStrength()
+                 << " - Exp when slain: " << enemies[i].getDropExp() << endl;
+        }
 
-    for (int i = 0; i < enemies.size(); ++i) {
-        cout << i << ". " << enemies[i].getName()
-             << " - Health: " << enemies[i].getHealth()
-             << ", Strength: " << enemies[i].getStrength()
-             << " - Exp when slain: " << enemies[i].getDropExp() << endl;
-    }
-
-    cout << endl;
-
-    cin >> choice;
-
-    cout << endl;
-
-    if (choice < 0 || choice >= enemies.size()) {
-        cout << "Invalid choice. Exiting game..." << endl;
-        return 0;
-    }
-
-    Enemy& selectedEnemy = enemies[choice];
-
-    // Fighting sequence
-    cout << "The fight begins!" << endl;
-    while (selectedHero.getHealth() > 0 && selectedEnemy.getHealth() > 0) {
-        // Hero attacks Enemy
-        selectedHero.attack(selectedEnemy);
+        cout << enemies.size() << ". View Hero Stats" << endl;
+    
+        cout << "-1. to exit the game." << endl;
 
         cout << endl;
-        cout << selectedEnemy.getName() << " has " << selectedEnemy.getHealth() << " health left." << endl;
-        cout << selectedHero.getName() << " has " << selectedHero.getHealth() << " health left." << endl;
+        cin >> choice;
         cout << endl;
 
-        std::this_thread::sleep_for(std::chrono::seconds(4)); // Pause for 1 second
-
-        if (selectedEnemy.getHealth() <= 0) {
-            cout << "You defeated the " << selectedEnemy.getName() << "!" << endl;
-            selectedHero.gainExp(selectedEnemy.getDropExp());
-            enemies.erase(enemies.begin() + choice); // Remove enemy from the list
+        if (choice == enemies.size()){
+            selectedHero.displayStats();
+            cout << endl;
+            continue;
+        }
+    
+        if (choice == -1) {
+            cout << "Exiting game..." << endl;
             break;
         }
-
-        // Enemy attacks Hero
-        selectedEnemy.attack(selectedHero);
-        if (selectedHero.getHealth() <= 0) {
-            cout << "You were defeated by the " << selectedEnemy.getName() << "!" << endl;
-            cout << "Game Over!" << endl;
-            return 0;
+    
+        if (choice < 0 || choice >= enemies.size()+1) {
+            cout << "Invalid choice. Try again." << endl;
+            cout << endl;
+            continue;
         }
+    
+        Enemy& selectedEnemy = enemies[choice];
 
-        std::this_thread::sleep_for(std::chrono::seconds(1)); // Pause for 1 second
+        cout << "The fight begins!" << endl;
+        cout << endl;
+
+        while (selectedHero.getHealth() > 0 && selectedEnemy.getHealth() > 0) {
+            
+            //Hero attacks enemy
+            selectedHero.attack(selectedEnemy);
+
+            std::this_thread::sleep_for(std::chrono::seconds(2)); // Pause for 1 second
+
+            cout << endl;
+            cout << selectedEnemy.getName() << " has " << selectedEnemy.getHealth() << " health left." << endl;
+            cout << endl;
+
+            std::this_thread::sleep_for(std::chrono::seconds(2)); // Pause for 1 second
+
+            if (selectedEnemy.getHealth() <= 0) {
+                cout << "You defeated the " << selectedEnemy.getName() << "!" << endl;
+                selectedHero.gainExp(selectedEnemy.getDropExp());
+                cout << endl;
+    
+                enemies.erase(enemies.begin() + choice); // Remove enemy from the list
+                break;
+            }
+
+            // Enemy attacks Hero
+            selectedEnemy.attack(selectedHero);
+            std::this_thread::sleep_for(std::chrono::seconds(2)); // Pause for 1 second
+
+            cout << endl;
+            cout << selectedHero.getName() << " has " << selectedHero.getHealth() << " health left." << endl;
+            cout << endl;
+
+            std::this_thread::sleep_for(std::chrono::seconds(2)); // Pause for 1 second
+
+            if (selectedHero.getHealth() <= 0) {
+                cout << "You were defeated by the " << selectedEnemy.getName() << "!" << endl;
+                cout << "Game Over!" << endl;
+                return 0;
+            }
+
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(2)); // Pause for 1 second
     }
 
     return 0;

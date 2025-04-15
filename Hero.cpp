@@ -31,7 +31,20 @@ int Hero::getStrength() const {
 
 void Hero::gainExp(int amount) {
     exp += amount;
-    cout << name << " gained " << amount << " experience points!" << endl;
+    cout << name << " gained " << amount << " EXP!" << endl;
+    checkLevelUp(); // Automatically check after gaining Exp
+}
+
+void Hero::checkLevelUp() {
+    const int expPerLevel = 100 * level;
+    while (exp >= expPerLevel) {
+        exp -= expPerLevel;
+        level++;
+        strength += 5;
+        health += 20;
+        cout << name << " leveled up to level " << level << "!" << endl;
+        cout << "Stats increased! +" << 5 << " Strength, +" << 20 << " Health!" << endl;
+    }
 }
 
 string Hero::getName() const {

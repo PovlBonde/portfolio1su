@@ -20,7 +20,8 @@ public:
     void takeDamage(int damage);
     void attack(Enemy& target);
     int getHealth() const;
-    int getStrength() const; // Add method to get strength
+    int getStrength() const;
     void gainExp(int amount);
+    void checkLevelUp();
     string getName() const;
 };
