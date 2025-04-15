@@ -25,6 +25,10 @@ int Hero::getHealth() const {
     return health;
 }
 
+int Hero::getStrength() const {
+    return strength;
+}
+
 void Hero::gainExp(int amount) {
     exp += amount;
     cout << name << " gained " << amount << " experience points!" << endl;

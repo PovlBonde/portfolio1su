@@ -25,6 +25,10 @@ int Enemy::getHealth() const {
     return health;
 }
 
+int Enemy::getStrength() const {
+    return strength;
+}
+
 string Enemy::getName() const {
     return name;
 }

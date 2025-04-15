@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <thread> // Add this include for std::this_thread::sleep_for
+#include <chrono> // Add this include for std::chrono::seconds
 #include "Hero.h"
 #include "Enemy.h"
 using namespace std;
@@ -13,8 +16,11 @@ int main() {
         cout << "0. Create Game" << endl;
         cout << "1. Load Game" << endl;
         cout << "2. Exit" << endl;
+        cout << endl;
 
         cin >> choice;
+
+        cout << endl;
 
         switch (choice) {
             case 0:
@@ -35,13 +41,19 @@ int main() {
 
     Hero selectedHero("", 0, 0, 0, 0); // Declare the Hero object outside the switch block
 
+    cout << endl;
+
     while (true) {
         cout << "Select your character:" << endl;
         cout << "0. Warrior - A strong human with high resilience, but lower damage" << endl;
         cout << "1. Mage - A powerful magic being with high damage potential, but easy to kill, if struck" << endl;
         cout << "2. Archer - A fast and adept elf, capable of high damage, while still able to take a couple of hits" << endl;
 
+        cout << endl;
+
         cin >> choice;
+
+        cout << endl;
 
         switch (choice) {
             case 0:
@@ -63,16 +75,30 @@ int main() {
         break; // Exit the loop if a valid option is selected
     }
 
+    cout << endl;
+
     selectedHero.displayStats(); // Use the selected Hero object
+
+    cout << endl;
+
+    vector<Enemy> enemies;
+    enemies.push_back(Enemy("Horse", 50, 5, 100));
+    enemies.push_back(Enemy("Lesser Goblin", 40, 8, 200));
+    enemies.push_back(Enemy("Greater Goblin", 60, 10, 300));
+    enemies.push_back(Enemy("Troll", 80, 13, 400));
+    enemies.push_back(Enemy("Dark Elf", 60, 16, 500));
 
     cout << "Ahead of you are a group of enemies, blocking your way to the dragon" << endl;
     cout << "Choose an option:" << endl;
     cout << "0. Fight" << endl;
     cout << "1. Save Game" << endl;
     cout << "2. Exit Game" << endl;
+    cout << endl;
 
     while (true) {
         cin >> choice;
+
+        cout << endl;
 
         switch (choice) {
             case 0:
@@ -90,55 +116,48 @@ int main() {
         }
         break;
     }
+
+    cout << endl;
+
     cout << "Select an enemy to fight:" << endl;
 
-    cout << "0. Horse - Health: 50, Strength: 5 - Exp when slain: 100" << endl;
-    cout << "1. Lesser Goblin - Health: 40, Strength: 8 - Exp when slain: 200" << endl;
-    cout << "2. Greater Goblin - Health: 60, Strength: 10 - Exp when slain: 300" << endl;
-    cout << "3. Troll - Health: 80, Strength: 13 - Exp when slain: 400" << endl;
-    cout << "4. Dark Elf - Health: 60, Strength: 16 - Exp when slain: 500" << endl;
-
-    Enemy selectedEnemy("", 0, 0, 0); // Initialize the Enemy object
-
-    while (true){
-        cin >> choice;
-
-        switch (choice) {
-            case 0:
-                cout << "You have chosen to fight the Horse!" << endl;
-                selectedEnemy = Enemy("Horse", 50, 5, 100); 
-                break;
-            case 1:
-                cout << "You have chosen to fight the Lesser Goblin!" << endl;
-                selectedEnemy = Enemy("Lesser Goblin", 40, 8, 200); 
-                break;
-            case 2:
-                cout << "You have chosen to fight the Greater Goblin!" << endl;
-                selectedEnemy = Enemy("Greater Goblin", 60, 10, 300); 
-                break;
-            case 3:
-                cout << "You have chosen to fight the Troll!" << endl;
-                selectedEnemy = Enemy("Troll", 80, 13, 400); 
-                break;
-            case 4:
-                cout << "You have chosen to fight the Dark Elf!" << endl;
-                selectedEnemy = Enemy("Dark Elf", 60, 16, 500);
-                break;
-            default:
-                cout << "Invalid choice. Exiting game..." << endl;
-                return 0; // Exit the game on invalid input
-        }
-        break; // Exit the loop after selecting an enemy
+    for (int i = 0; i < enemies.size(); ++i) {
+        cout << i << ". " << enemies[i].getName()
+             << " - Health: " << enemies[i].getHealth()
+             << ", Strength: " << enemies[i].getStrength()
+             << " - Exp when slain: " << enemies[i].getDropExp() << endl;
     }
+
+    cout << endl;
+
+    cin >> choice;
+
+    cout << endl;
+
+    if (choice < 0 || choice >= enemies.size()) {
+        cout << "Invalid choice. Exiting game..." << endl;
+        return 0;
+    }
+
+    Enemy& selectedEnemy = enemies[choice];
 
     // Fighting sequence
     cout << "The fight begins!" << endl;
     while (selectedHero.getHealth() > 0 && selectedEnemy.getHealth() > 0) {
         // Hero attacks Enemy
         selectedHero.attack(selectedEnemy);
+
+        cout << endl;
+        cout << selectedEnemy.getName() << " has " << selectedEnemy.getHealth() << " health left." << endl;
+        cout << selectedHero.getName() << " has " << selectedHero.getHealth() << " health left." << endl;
+        cout << endl;
+
+        std::this_thread::sleep_for(std::chrono::seconds(4)); // Pause for 1 second
+
         if (selectedEnemy.getHealth() <= 0) {
             cout << "You defeated the " << selectedEnemy.getName() << "!" << endl;
             selectedHero.gainExp(selectedEnemy.getDropExp());
+            enemies.erase(enemies.begin() + choice); // Remove enemy from the list
             break;
         }
 
@@ -149,6 +168,8 @@ int main() {
             cout << "Game Over!" << endl;
             return 0;
         }
+
+        std::this_thread::sleep_for(std::chrono::seconds(1)); // Pause for 1 second
     }
 
     return 0;

@@ -20,5 +20,6 @@ public:
     void attack(Hero& target);
     int getHealth() const;
     string getName() const;
-    int getDropExp() const; 
+    int getDropExp() const;
+    int getStrength() const; // Add method to get strength
 };
