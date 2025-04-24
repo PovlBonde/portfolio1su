@@ -25,8 +25,24 @@ int Hero::getHealth() const {
     return health;
 }
 
+int Hero::getMaxHealth() const {
+    return 100 + (level - 1) * 20;
+}
+
+void Hero::setMaxHealth() {
+    health = getMaxHealth();
+}
+
 int Hero::getStrength() const {
     return strength;
+}
+
+int Hero::getLevel() const {
+    return level;
+}
+
+int Hero::getExp() const {
+    return exp;
 }
 
 void Hero::gainExp(int amount) {
@@ -44,6 +60,7 @@ void Hero::checkLevelUp() {
         health += 20;
         cout << name << " leveled up to level " << level << "!" << endl;
         cout << "Stats increased! +" << 5 << " Strength, +" << 20 << " Health!" << endl;
+        cout << endl;
     }
 }
 

@@ -1,0 +1,4 @@
+Warrior 3 0 79 20
+2
+Troll 60 13 200
+Dark Elf 50 16 250
