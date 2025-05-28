@@ -173,51 +173,115 @@ int main() {
     Dungeon dungeon2("Dark Cave", 2);
     Dungeon dungeon3("Troll Lair", 3);
 
-    cout << "Ahead of you lies three dungeons:" << endl;
-    cout << "0. " << dungeon.getName() << " (Level " << dungeon.getLevel() << ")" << endl;
-    cout << "1. " << dungeon2.getName() << " (Level " << dungeon2.getLevel() << ")" << endl;
-    cout << "2. " << dungeon3.getName() << " (Level " << dungeon3.getLevel() << ")" << endl;
+    // Main dungeon loop
+    while (true) {
+        cout << "Ahead of you lies three dungeons:" << endl;
+        cout << "0. " << dungeon.getName() << " (Level " << dungeon.getLevel() << ", Gold when defeated: " << dungeon.getDropGold() << ")" << endl;
+        cout << "1. " << dungeon2.getName() << " (Level " << dungeon2.getLevel() << ", Gold when defeated: " << dungeon2.getDropGold() << ")" << endl;
+        cout << "2. " << dungeon3.getName() << " (Level " << dungeon3.getLevel() << ", Gold when defeated: " << dungeon3.getDropGold() << ")" << endl;
+        cout << "3. Exit Game" << endl;
+        cout << "Select a dungeon to enter (0-2) or 3 to exit:" << endl;
+        cin >> choice;
+        cout << endl;
 
-    cout << "Select a dungeon to enter (0-2):" << endl;
-    cin >> choice;
-    cout << endl;
-
-    switch (choice) {
-        case 0:
-            cout << "You have entered " << dungeon.getName() << "!" << endl;
-            enemies = dungeon.getEnemies();
+        if (choice == 3) {
+            cout << "Exiting game..." << endl;
             break;
-        case 1:
-            cout << "You have entered " << dungeon2.getName() << "!" << endl;
-            enemies = dungeon2.getEnemies();
+        }
+
+        switch (choice) {
+            case 0:
+                cout << "You have entered " << dungeon.getName() << "!" << endl;
+                enemies = dungeon.getEnemies();
+                break;
+            case 1:
+                cout << "You have entered " << dungeon2.getName() << "!" << endl;
+                enemies = dungeon2.getEnemies();
+                break;
+            case 2:
+                cout << "You have entered " << dungeon3.getName() << "!" << endl;
+                enemies = dungeon3.getEnemies();
+                break;
+            default:
+                cout << "Invalid choice. Defaulting to " << dungeon.getName() << "." << endl;
+                enemies = dungeon.getEnemies();
+        }
+
+        cout << endl;
+        cout << "Enemies in this dungeon:" << endl;
+        for (const auto& enemy : enemies) {
+            enemy.displayStats();
+        }
+        cout << endl;
+
+        // Battle all enemies in the dungeon
+        while (!enemies.empty() && selectedHero.getHealth() > 0) {
+            cout << "Select an enemy to fight: " << endl;
+            cin >> choice;
+            cout << endl;
+            if (choice < 0 || choice >= enemies.size()) {
+                cout << "Invalid choice. Defaulting to the first enemy." << endl;
+                choice = 0;
+            }
+            Enemy& selectedEnemy = enemies[choice];
+            cout << "You have selected to fight " << selectedEnemy.getName() << "!" << endl;
+
+            // Fighting sequence
+            cout << "The fight begins!" << endl;
+            while (selectedHero.getHealth() > 0 && selectedEnemy.getHealth() > 0) {
+                // Hero attacks Enemy
+                selectedHero.attack(selectedEnemy);
+                cout << endl;
+                cout << selectedEnemy.getName() << " has " << selectedEnemy.getHealth() << " health left." << endl;
+                cout << selectedHero.getName() << " has " << selectedHero.getHealth() << " health left." << endl;
+                cout << endl;
+
+                std::this_thread::sleep_for(std::chrono::seconds(1)); // Pause for 1 second
+
+                if (selectedEnemy.getHealth() <= 0) {
+                    cout << "You defeated the " << selectedEnemy.getName() << "!" << endl;
+                    selectedHero.gainExp(selectedEnemy.getDropExp());
+                    enemies.erase(enemies.begin() + choice); // Remove enemy from the list
+                    break;
+                }
+                // Enemy attacks Hero
+                selectedEnemy.attack(selectedHero);
+                cout << endl;
+                cout << selectedHero.getName() << " has " << selectedHero.getHealth() << " health left." << endl;
+                cout << selectedEnemy.getName() << " has " << selectedEnemy.getHealth() << " health left." << endl;
+                cout << endl;
+                std::this_thread::sleep_for(std::chrono::seconds(1)); // Pause for 1 second
+                if (selectedHero.getHealth() <= 0) {
+                    cout << "You have been defeated by the " << selectedEnemy.getName() << "!" << endl;
+                    cout << "Game Over!" << endl;
+                    return 0;
+                }
+            }
+
+            if (!enemies.empty() && selectedHero.getHealth() > 0) {
+                cout << "Enemies remaining in this dungeon:" << endl;
+                for (size_t i = 0; i < enemies.size(); ++i) {
+                    cout << i << ". ";
+                    enemies[i].displayStats();
+                }
+                cout << endl;
+            }
+        }
+
+        if (selectedHero.getHealth() > 0) {
+            cout << "Congratulations! You have defeated all enemies in the dungeon!" << endl;
+            int goldEarned = 0;
+            if (choice == 0) goldEarned = dungeon.getDropGold();
+            else if (choice == 1) goldEarned = dungeon2.getDropGold();
+            else if (choice == 2) goldEarned = dungeon3.getDropGold();
+            cout << "You earned " << goldEarned << " gold!" << endl;
+        } else {
+            // Hero died, exit game
             break;
-        case 2:
-            cout << "You have entered " << dungeon3.getName() << "!" << endl;
-            enemies = dungeon3.getEnemies();
-            break;
-        default:
-            cout << "Invalid choice. Defaulting to " << dungeon.getName() << "." << endl;
-            enemies = dungeon.getEnemies();
-    }
+        }
 
-    cout << endl;
-    cout << "Enemies in this dungeon:" << endl;
-    for (const auto& enemy : enemies) {
-        enemy.displayStats();
+        continue; // Continue to the next dungeon or exit
     }
-    cout << endl;
-
-    if (enemies.empty()) {
-        enemies = {
-            Enemy("Horse", 40, 5, 50),
-            Enemy("Lesser Goblin", 30, 8, 100),
-            Enemy("Greater Goblin", 50, 10, 150),
-            Enemy("Troll", 60, 13, 200),
-            Enemy("Dark Elf", 50, 16, 250)
-        };
-    }
-
-    
 
     return 0;
 }

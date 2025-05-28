@@ -1,19 +1,22 @@
 #include <string>
 #include <vector>
 #include "Enemy.h"
+using namespace std;
 
 class Dungeon {
 public:
-    Dungeon(const std::string& name, int level);
+    Dungeon(const string& name, int level);
 
-    std::string getName() const;
+    string getName() const;
     int getLevel() const;
-    const std::vector<Enemy>& getEnemies() const;
+    const vector<Enemy>& getEnemies() const;
+    int getDropGold() const;
 
 private:
-    std::string name;
+    string name;
     int level;
-    std::vector<Enemy> enemies;
+    vector<Enemy> enemies;
+    int dropGold;
 
-    std::vector<Enemy> generateEnemies(int level);
+    vector<Enemy> generateEnemies(int level);
 };
