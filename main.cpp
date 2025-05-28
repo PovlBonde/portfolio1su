@@ -8,6 +8,7 @@
 #include <fstream>
 #include "Hero.h"
 #include "Enemy.h"
+#include "Dungeon.h"
 using namespace std;
 
 void saveGame(const Hero& hero, const vector<Enemy>& enemies) {
@@ -167,7 +168,44 @@ int main() {
     selectedHero.displayStats();
     cout << endl;
 
-    
+    //Create dungeon and enemies
+    Dungeon dungeon("Goblin Forest", 1);
+    Dungeon dungeon2("Dark Cave", 2);
+    Dungeon dungeon3("Troll Lair", 3);
+
+    cout << "Ahead of you lies three dungeons:" << endl;
+    cout << "0. " << dungeon.getName() << " (Level " << dungeon.getLevel() << ")" << endl;
+    cout << "1. " << dungeon2.getName() << " (Level " << dungeon2.getLevel() << ")" << endl;
+    cout << "2. " << dungeon3.getName() << " (Level " << dungeon3.getLevel() << ")" << endl;
+
+    cout << "Select a dungeon to enter (0-2):" << endl;
+    cin >> choice;
+    cout << endl;
+
+    switch (choice) {
+        case 0:
+            cout << "You have entered " << dungeon.getName() << "!" << endl;
+            enemies = dungeon.getEnemies();
+            break;
+        case 1:
+            cout << "You have entered " << dungeon2.getName() << "!" << endl;
+            enemies = dungeon2.getEnemies();
+            break;
+        case 2:
+            cout << "You have entered " << dungeon3.getName() << "!" << endl;
+            enemies = dungeon3.getEnemies();
+            break;
+        default:
+            cout << "Invalid choice. Defaulting to " << dungeon.getName() << "." << endl;
+            enemies = dungeon.getEnemies();
+    }
+
+    cout << endl;
+    cout << "Enemies in this dungeon:" << endl;
+    for (const auto& enemy : enemies) {
+        enemy.displayStats();
+    }
+    cout << endl;
 
     if (enemies.empty()) {
         enemies = {

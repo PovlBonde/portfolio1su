@@ -1,3 +1,6 @@
+#ifndef ENEMY_H
+#define ENEMY_H
+
 #include <string>
 #include <iostream>
 using namespace std;
@@ -23,3 +26,5 @@ public:
     int getDropExp() const;
     int getStrength() const;
 };
+
+#endif // ENEMY_H
