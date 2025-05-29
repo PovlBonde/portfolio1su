@@ -11,7 +11,7 @@ private:
     int exp;
     int health;
     int strength;
-    int dropExp;
+    int gold = 0; // Add this line
 
 public:
     Hero(const string& name, int level, int exp, int health, int strength);
@@ -28,4 +28,6 @@ public:
     string getName() const;
     int getLevel() const;
     int getExp() const;
+    int getGold() const { return gold; } // Add this getter
+    void addGold(int amount) { gold += amount; } // Add this setter
 };

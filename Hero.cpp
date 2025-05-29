@@ -8,7 +8,13 @@ Hero::Hero(const string& name, int level, int exp, int health, int strength)
     : name(name), level(level), exp(exp), health(health), strength(strength) {}
 
 void Hero::displayStats() const {
-    cout << "Name: " << name << ", Level: " << level << ", Experience: " << exp << ", Health: " << health << ", Strength: " << strength << endl;
+    cout << "Name: " << name
+         << ", Level: " << level
+         << ", Experience: " << exp
+         << ", Health: " << health
+         << ", Strength: " << strength
+         << ", Gold: " << gold // Add this line
+         << endl;
 }
 
 void Hero::takeDamage(int damage) {

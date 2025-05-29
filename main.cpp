@@ -11,7 +11,7 @@
 #include "Dungeon.h"
 using namespace std;
 
-void saveGame(const Hero& hero, const vector<Enemy>& enemies) {
+void saveGame(const Hero& hero, const vector<Enemy>& enemies, const vector<bool>& dungeonDefeated) {
     ofstream saveFile("savegame.txt");
     if (!saveFile.is_open()) {
         cout << "Error: Could not open file to save game!" << endl;
@@ -33,11 +33,17 @@ void saveGame(const Hero& hero, const vector<Enemy>& enemies) {
                  << enemy.getDropExp() << endl;
     }
 
+    // Save dungeonDefeated vector
+    for (bool defeated : dungeonDefeated) {
+        saveFile << defeated << " ";
+    }
+    saveFile << endl;
+
     saveFile.close();
     cout << "Game saved successfully!" << endl << endl;
 }
 
-bool loadGame(Hero& hero, vector<Enemy>& enemies) {
+bool loadGame(Hero& hero, vector<Enemy>& enemies, vector<bool>& dungeonDefeated) {
     ifstream loadFile("savegame.txt");
     if (!loadFile.is_open()) {
         cout << "No saved game found!" << endl;
@@ -88,7 +94,19 @@ bool loadGame(Hero& hero, vector<Enemy>& enemies) {
         }
     }
 
+    // Load dungeonDefeated vector
+    dungeonDefeated.clear();
+    string line;
+    getline(loadFile, line); // Read the line with dungeonDefeated
+    if (line.empty()) getline(loadFile, line); // In case of leftover newline
+    istringstream iss(line);
+    bool val;
+    while (iss >> val) {
+        dungeonDefeated.push_back(val);
+    }
+
     loadFile.close();
+
     cout << "Game loaded successfully!" << endl;
     return true;
 }
@@ -99,6 +117,8 @@ int main() {
     int choice;
     Hero selectedHero("", 0, 0, 0, 0);
     vector<Enemy> enemies;
+    vector<bool> dungeonDefeated(4, false); // Track if each dungeon is defeated
+    bool bossUnlocked = false; // Track if boss is unlocked
     bool gameLoaded = false;
 
     while (true) {
@@ -116,7 +136,8 @@ int main() {
                 break;
             case 1:
                 cout << "Loading game..." << endl;
-                gameLoaded = loadGame(selectedHero, enemies);
+                // When loading
+                gameLoaded = loadGame(selectedHero, enemies, dungeonDefeated);
                 if (!gameLoaded) {
                     cout << "Starting a new game instead..." << endl;
                 }
@@ -169,59 +190,102 @@ int main() {
     cout << endl;
 
     //Create dungeon and enemies
-    Dungeon dungeon("Goblin Forest", 1);
-    Dungeon dungeon2("Dark Cave", 2);
-    Dungeon dungeon3("Troll Lair", 3);
+    Dungeon dungeon0("Goblin Forest", 1);
+    Dungeon dungeon1("Goblin Cave", 2);
+    Dungeon dungeon2("Troll Lair", 3);
+    Dungeon dungeon3("Dark Castle", 4);
 
     // Main dungeon loop
     while (true) {
         cout << "Ahead of you lies three dungeons:" << endl;
-        cout << "0. " << dungeon.getName() << " (Level " << dungeon.getLevel() << ", Gold when defeated: " << dungeon.getDropGold() << ")" << endl;
-        cout << "1. " << dungeon2.getName() << " (Level " << dungeon2.getLevel() << ", Gold when defeated: " << dungeon2.getDropGold() << ")" << endl;
-        cout << "2. " << dungeon3.getName() << " (Level " << dungeon3.getLevel() << ", Gold when defeated: " << dungeon3.getDropGold() << ")" << endl;
-        cout << "3. Exit Game" << endl;
-        cout << "Select a dungeon to enter (0-2) or 3 to exit:" << endl;
+        cout << "0. " << dungeon0.getName() << " (Level " << dungeon0.getLevel() << ", Gold when defeated: " << dungeon0.getDropGold() << ")";
+        if (dungeonDefeated[0]) cout << " [DEFEATED]";
+        cout << endl;
+        cout << "1. " << dungeon1.getName() << " (Level " << dungeon1.getLevel() << ", Gold when defeated: " << dungeon1.getDropGold() << ")";
+        if (dungeonDefeated[1]) cout << " [DEFEATED]";
+        cout << endl;
+        cout << "2. " << dungeon2.getName() << " (Level " << dungeon2.getLevel() << ", Gold when defeated: " << dungeon2.getDropGold() << ")";
+        if (dungeonDefeated[2]) cout << " [DEFEATED]";
+        cout << endl;
+        cout << "3. " << dungeon3.getName() << " (Level " << dungeon3.getLevel() << ", Gold when defeated: " << dungeon3.getDropGold() << ")";
+        if (dungeonDefeated[3]) cout << " [DEFEATED]";
+        cout << endl;
+        if (bossUnlocked) {
+            cout << "7. Boss Fight (UNLOCKED!)" << endl;
+        }
+        cout << "4. View Hero Stats" << endl;
+        cout << "5. Exit Game" << endl;
+        cout << "6. Save Game" << endl;
+        cout << endl;
+        cout << "Select an action:" << endl;
         cin >> choice;
         cout << endl;
 
-        if (choice == 3) {
+        if (choice == 4) {
+            selectedHero.displayStats();
+            cout << endl;
+            continue;
+        }
+        if (choice == 5) {
             cout << "Exiting game..." << endl;
             break;
+        }
+        if (choice == 6) { // <-- Add this block
+            // When saving
+            saveGame(selectedHero, enemies, dungeonDefeated);
+            continue;
         }
 
         switch (choice) {
             case 0:
-                cout << "You have entered " << dungeon.getName() << "!" << endl;
-                enemies = dungeon.getEnemies();
+                cout << "You have entered " << dungeon0.getName() << "!" << endl;
+                enemies = dungeon0.getEnemies();
                 break;
             case 1:
+                cout << "You have entered " << dungeon1.getName() << "!" << endl;
+                enemies = dungeon1.getEnemies();
+                break;
+            case 2:
                 cout << "You have entered " << dungeon2.getName() << "!" << endl;
                 enemies = dungeon2.getEnemies();
                 break;
-            case 2:
+            case 3:
                 cout << "You have entered " << dungeon3.getName() << "!" << endl;
                 enemies = dungeon3.getEnemies();
                 break;
             default:
-                cout << "Invalid choice. Defaulting to " << dungeon.getName() << "." << endl;
-                enemies = dungeon.getEnemies();
+                cout << "Invalid choice. Defaulting to " << dungeon0.getName() << "." << endl;
+                enemies = dungeon0.getEnemies();
         }
 
         cout << endl;
         cout << "Enemies in this dungeon:" << endl;
-        for (const auto& enemy : enemies) {
-            enemy.displayStats();
+        for (size_t i = 0; i < enemies.size(); ++i) {
+            cout << i << ". ";
+            enemies[i].displayStats();
         }
+        cout << enemies.size() << ". View Hero stats" << endl;
+        cout << enemies.size() + 1 << ". Exit Dungeon" << endl;
         cout << endl;
 
         // Battle all enemies in the dungeon
         while (!enemies.empty() && selectedHero.getHealth() > 0) {
-            cout << "Select an enemy to fight: " << endl;
+            choice = -1;
+            cout << "Select an action: " << endl;
             cin >> choice;
             cout << endl;
-            if (choice < 0 || choice >= enemies.size()) {
-                cout << "Invalid choice. Defaulting to the first enemy." << endl;
-                choice = 0;
+            if (choice < 0) {
+                cout << "Invalid choice. Try again" << endl;
+                continue;
+            }
+            if (choice == static_cast<int>(enemies.size())) {
+                selectedHero.displayStats();
+                cout << endl;
+                continue; // Go back to the enemy selection
+            }
+            if (choice == static_cast<int>(enemies.size() + 1)) {
+                cout << "Exiting dungeon..." << endl;
+                break;
             }
             Enemy& selectedEnemy = enemies[choice];
             cout << "You have selected to fight " << selectedEnemy.getName() << "!" << endl;
@@ -271,13 +335,59 @@ int main() {
         if (selectedHero.getHealth() > 0) {
             cout << "Congratulations! You have defeated all enemies in the dungeon!" << endl;
             int goldEarned = 0;
-            if (choice == 0) goldEarned = dungeon.getDropGold();
-            else if (choice == 1) goldEarned = dungeon2.getDropGold();
-            else if (choice == 2) goldEarned = dungeon3.getDropGold();
+            if (choice == 0) {
+                goldEarned = dungeon0.getDropGold();
+                dungeonDefeated[0] = true;
+            }
+            else if (choice == 1) {
+                goldEarned = dungeon1.getDropGold();
+                dungeonDefeated[1] = true;
+            }
+            else if (choice == 2) {
+                goldEarned = dungeon2.getDropGold();
+                dungeonDefeated[2] = true;
+            }
+            else if (choice == 3) {
+                goldEarned = dungeon3.getDropGold();
+                dungeonDefeated[3] = true;
+            }
             cout << "You earned " << goldEarned << " gold!" << endl;
+            selectedHero.addGold(goldEarned);
+
+            // Unlock boss if all dungeons are defeated
+            bossUnlocked = dungeonDefeated[0] && dungeonDefeated[1] && dungeonDefeated[2] && dungeonDefeated[3];
         } else {
             // Hero died, exit game
             break;
+        }
+
+        if (bossUnlocked && choice == 7) {
+            cout << "You have unlocked the BOSS FIGHT!" << endl;
+            // You can define a special boss here
+            Enemy boss("Ancient Dragon", 150, 25, 500);
+            cout << "Boss: ";
+            boss.displayStats();
+            cout << endl;
+
+            // Boss fight loop
+            while (selectedHero.getHealth() > 0 && boss.getHealth() > 0) {
+                selectedHero.attack(boss);
+                cout << boss.getName() << " has " << boss.getHealth() << " health left." << endl;
+                if (boss.getHealth() <= 0) {
+                    cout << "You have defeated the " << boss.getName() << "! YOU WIN THE GAME!" << endl;
+                    return 0;
+                }
+                boss.attack(selectedHero);
+                cout << selectedHero.getName() << " has " << selectedHero.getHealth() << " health left." << endl;
+                if (selectedHero.getHealth() <= 0) {
+                    cout << "You have been defeated by the " << boss.getName() << "!" << endl;
+                    cout << "Game Over!" << endl;
+                    return 0;
+                }
+                cout << endl;
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
+            continue;
         }
 
         continue; // Continue to the next dungeon or exit

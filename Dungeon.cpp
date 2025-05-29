@@ -32,38 +32,35 @@ int Dungeon::getDropGold() const {
 
 vector<Enemy> Dungeon::generateEnemies(int level) {
     vector<Enemy> enemies;
-    int numEnemies = rand() % 3 + level; // 1–(level+2) enemies
+    int numEnemies = rand() % 2 + level; // 1–(level+1) enemies, less overwhelming
 
     for (int i = 0; i < numEnemies; ++i) {
         string enemyName;
         int health, strength, dropExp;
 
-        if (level <= 0) {
-            throw invalid_argument("Dungeon level must be > 0");
-        }
-        else if (level == 1) {
+        if (level == 1) {
             enemyName = "Lesser Goblin L" + to_string(level) + "-" + to_string(i + 1);
-            health = 20 + level * 10 + rand() % 10;
-            strength = 5 + level * 2 + rand() % 5;
-            dropExp = 30 + level * 10;
+            health = 18 + rand() % 6;         // 18–23 HP
+            strength = 4 + rand() % 3;        // 4–6 STR
+            dropExp = 30 + rand() % 11;       // 30–40 EXP
         }
         else if (level == 2) {
             enemyName = "Greater Goblin L" + to_string(level) + "-" + to_string(i + 1);
-            health = 30 + level * 10 + rand() % 15;
-            strength = 8 + level * 2 + rand() % 6;
-            dropExp = 50 + level * 15;
+            health = 28 + rand() % 8;         // 28–35 HP
+            strength = 7 + rand() % 3;        // 7–9 STR
+            dropExp = 45 + rand() % 16;       // 45–60 EXP
         }
         else if (level == 3) {
             enemyName = "Troll L" + to_string(level) + "-" + to_string(i + 1);
-            health = 40 + level * 12 + rand() % 20;
-            strength = 12 + level * 3 + rand() % 8;
-            dropExp = 80 + level * 20;
+            health = 40 + rand() % 11;        // 40–50 HP
+            strength = 10 + rand() % 4;       // 10–13 STR
+            dropExp = 70 + rand() % 21;       // 70–90 EXP
         }
         else if (level == 4) {
             enemyName = "Dark Elf L" + to_string(level) + "-" + to_string(i + 1);
-            health = 60 + level * 15 + rand() % 30;
-            strength = 15 + level * 4 + rand() % 10;
-            dropExp = 120 + level * 25;
+            health = 55 + rand() % 16;        // 55–70 HP
+            strength = 13 + rand() % 5;       // 13–17 STR
+            dropExp = 110 + rand() % 21;      // 110–130 EXP
         }
 
         enemies.emplace_back(enemyName, health, strength, dropExp);
