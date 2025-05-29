@@ -11,7 +11,23 @@ Dungeon::Dungeon(const string& name, int level)
         throw invalid_argument("Dungeon level must be > 0");
     }
     enemies = generateEnemies(level);
-    dropGold = rand() % (level * 10 + 10) + 5; // Store drop gold once
+    dropGold = rand() % (level * 10 + 10) + 5;
+
+    // Weapon drop logic
+    if (level == 1)
+        droppedWeapon = new Weapon("Large Stick", 5, 1, 10);
+    else if (level == 2)
+        droppedWeapon = new Weapon("Machette", 8, 2, 15);
+    else if (level == 3)
+        droppedWeapon = new Weapon("Warrior Sword", 12, 3, 20);
+    else if (level == 4)
+        droppedWeapon = new Weapon("Mace", 18, 4, 30);
+    else
+        droppedWeapon = nullptr;
+}
+
+Dungeon::~Dungeon() {
+    if (droppedWeapon) delete droppedWeapon;
 }
 
 string Dungeon::getName() const {
@@ -28,6 +44,10 @@ const vector<Enemy>& Dungeon::getEnemies() const {
 
 int Dungeon::getDropGold() const {
     return dropGold; // Return stored value
+}
+
+Weapon* Dungeon::getDroppedWeapon() const {
+    return droppedWeapon ? new Weapon(*droppedWeapon) : nullptr;
 }
 
 vector<Enemy> Dungeon::generateEnemies(int level) {

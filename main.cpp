@@ -6,6 +6,7 @@
 #include <thread>
 #include <chrono>
 #include <fstream>
+#include <sqlite3.h>
 #include "Hero.h"
 #include "Enemy.h"
 #include "Dungeon.h"
@@ -335,24 +336,44 @@ int main() {
         if (selectedHero.getHealth() > 0) {
             cout << "Congratulations! You have defeated all enemies in the dungeon!" << endl;
             int goldEarned = 0;
+            Weapon* droppedWeapon = nullptr;
             if (choice == 0) {
                 goldEarned = dungeon0.getDropGold();
                 dungeonDefeated[0] = true;
+                droppedWeapon = dungeon0.getDroppedWeapon();
             }
             else if (choice == 1) {
                 goldEarned = dungeon1.getDropGold();
                 dungeonDefeated[1] = true;
+                droppedWeapon = dungeon1.getDroppedWeapon();
             }
             else if (choice == 2) {
                 goldEarned = dungeon2.getDropGold();
                 dungeonDefeated[2] = true;
+                droppedWeapon = dungeon2.getDroppedWeapon();
             }
             else if (choice == 3) {
                 goldEarned = dungeon3.getDropGold();
                 dungeonDefeated[3] = true;
+                droppedWeapon = dungeon3.getDroppedWeapon();
             }
             cout << "You earned " << goldEarned << " gold!" << endl;
             selectedHero.addGold(goldEarned);
+
+            // Weapon drop
+            if (droppedWeapon) {
+                cout << "You found a weapon: ";
+                droppedWeapon->display();
+                cout << "Do you want to equip it? (1 = Yes, 0 = No): ";
+                int equipChoice;
+                cin >> equipChoice;
+                cout << endl;
+                if (equipChoice == 1) {
+                    selectedHero.equipWeapon(droppedWeapon);
+                } else {
+                    delete droppedWeapon;
+                }
+            }
 
             // Unlock boss if all dungeons are defeated
             bossUnlocked = dungeonDefeated[0] && dungeonDefeated[1] && dungeonDefeated[2] && dungeonDefeated[3];

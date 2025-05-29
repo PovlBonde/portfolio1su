@@ -5,7 +5,7 @@
 using namespace std;
 
 Hero::Hero(const string& name, int level, int exp, int health, int strength)
-    : name(name), level(level), exp(exp), health(health), strength(strength) {}
+    : name(name), level(level), exp(exp), health(health), strength(strength), weapon(nullptr) {}
 
 void Hero::displayStats() const {
     cout << "Name: " << name
@@ -13,8 +13,13 @@ void Hero::displayStats() const {
          << ", Experience: " << exp
          << ", Health: " << health
          << ", Strength: " << strength
-         << ", Gold: " << gold // Add this line
-         << endl;
+         << ", Gold: " << gold
+         << ", Enemies Defeated: " << enemiesDefeated << endl;
+    if (weapon) {
+        weapon->display();
+        if (weapon->isBroken()) cout << " (Broken)";
+        cout << endl;
+    }
 }
 
 void Hero::takeDamage(int damage) {
@@ -22,9 +27,29 @@ void Hero::takeDamage(int damage) {
     if (health < 0) health = 0;
 }
 
+void Hero::equipWeapon(Weapon* newWeapon) {
+    if (weapon) delete weapon; // Clean up old weapon
+    weapon = newWeapon;
+    cout << name << " equipped " << weapon->getName() << "!" << endl;
+    cout << endl;
+}
+
+int Hero::attackDamage() const {
+    if (weapon && !weapon->isBroken())
+        return weapon->getTotalDamage(strength);
+    return strength;
+}
+
 void Hero::attack(Enemy& target) {
-    cout << name << " attacks " << target.getName() << " for " << strength << " damage!" << endl;
-    target.takeDamage(strength);
+    int dmg = attackDamage();
+    cout << name << " attacks " << target.getName() << " for " << dmg << " damage!" << endl;
+    target.takeDamage(dmg);
+    if (weapon && !weapon->isBroken()) weapon->use();
+    if (target.getHealth() <= 0) {
+        enemiesDefeated++; // Increment when enemy is defeated
+        if (weapon && !weapon->isBroken())
+            weapon->incrementEnemiesDefeated(); // Track for weapon too
+    }
 }
 
 int Hero::getHealth() const {
@@ -74,4 +99,6 @@ string Hero::getName() const {
     return name;
 }
 
-Hero::~Hero() {}
+Hero::~Hero() {
+    if (weapon) delete weapon;
+}
