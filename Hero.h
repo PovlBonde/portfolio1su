@@ -1,3 +1,4 @@
+#include <map>
 #include <string>
 #include "Weapon.h"
 using namespace std;
@@ -15,6 +16,7 @@ private:
     int gold = 0;
     int enemiesDefeated = 0; // Add this line
     Weapon* weapon = nullptr; // Add this line
+    map<string, int> weaponKills; // weapon name -> kill count
 
 public:
     Hero(const string& name, int level, int exp, int health, int strength);
@@ -37,4 +39,5 @@ public:
     void equipWeapon(Weapon* newWeapon);
     int attackDamage() const; // Returns damage with weapon if equipped
     int getEnemiesDefeated() const { return enemiesDefeated; } // Add getter
+    void setEnemiesDefeated(int n) { enemiesDefeated = n; }
 };

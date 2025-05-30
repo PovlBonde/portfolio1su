@@ -21,8 +21,7 @@ void Weapon::display() const {
     std::cout << "Weapon: " << name
               << " | Base Damage: " << baseDamage
               << " | Strength Modifier: " << strengthModifier
-              << " | Durability: " << durability
-              << " | Enemies Defeated: " << enemiesDefeated << std::endl;
+              << " | Durability: " << durability << endl;
 }
 
 std::string Weapon::getName() const {

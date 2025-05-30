@@ -45,10 +45,13 @@ void Hero::attack(Enemy& target) {
     cout << name << " attacks " << target.getName() << " for " << dmg << " damage!" << endl;
     target.takeDamage(dmg);
     if (weapon && !weapon->isBroken()) weapon->use();
+
     if (target.getHealth() <= 0) {
-        enemiesDefeated++; // Increment when enemy is defeated
-        if (weapon && !weapon->isBroken())
-            weapon->incrementEnemiesDefeated(); // Track for weapon too
+        enemiesDefeated++;
+        if (weapon && !weapon->isBroken()) {
+            weaponKills[weapon->getName()]++;
+        }
+        // ...other code for enemy defeat...
     }
 }
 
@@ -78,7 +81,7 @@ int Hero::getExp() const {
 
 void Hero::gainExp(int amount) {
     exp += amount;
-    cout << name << " gained " << amount << " EXP!" << endl;
+    cout << name << " gained " << amount << " EXP!" << endl << endl;
     checkLevelUp(); // Automatically check after gaining Exp
 }
 

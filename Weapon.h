@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+using namespace std;
 
 class Weapon {
 private:
@@ -10,7 +11,6 @@ private:
     int baseDamage;
     int strengthModifier;
     int durability;
-    int enemiesDefeated = 0; // Add this line
 
 public:
     Weapon(const std::string& name, int baseDamage, int strengthModifier, int durability);
@@ -19,11 +19,9 @@ public:
     void use();
     bool isBroken() const;
     void display() const;
-
     std::string getName() const;
     int getDurability() const;
-    void incrementEnemiesDefeated() { enemiesDefeated++; }
-    int getEnemiesDefeated() const { return enemiesDefeated; }
+    int getStrengthModifier() const { return strengthModifier; }
 };
 
 #endif
