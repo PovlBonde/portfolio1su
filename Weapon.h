@@ -21,7 +21,7 @@ public:
     void display() const;
     std::string getName() const;
     int getDurability() const;
-    int getStrengthModifier() const { return strengthModifier; }
+    float getStrengthModifier() const { return strengthModifier; }
 };
 
 #endif
