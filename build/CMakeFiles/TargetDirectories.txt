@@ -1,0 +1,3 @@
+/home/sammy/portfolio1su/build/CMakeFiles/PortfolioGame.dir
+/home/sammy/portfolio1su/build/CMakeFiles/edit_cache.dir
+/home/sammy/portfolio1su/build/CMakeFiles/rebuild_cache.dir
