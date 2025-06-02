@@ -1,0 +1,40 @@
+CREATE TABLE IF NOT EXISTS hero (
+            name TEXT PRIMARY KEY,
+            level INTEGER,
+            exp INTEGER,
+            health INTEGER,
+            strength INTEGER,
+            gold INTEGER,
+            enemiesDefeated INTEGER
+);
+        
+CREATE TABLE IF NOT EXISTS weapon (
+            hero_name TEXT PRIMARY KEY,
+            name TEXT,
+            baseDamage INTEGER,
+            strengthModifier INTEGER,
+            durability INTEGER,
+            enemiesDefeated INTEGER,
+            FOREIGN KEY(hero_name) REFERENCES hero(name)
+);
+        
+CREATE TABLE IF NOT EXISTS dungeon_status (
+            hero_name TEXT,
+            dungeon_index INTEGER,
+            defeated INTEGER,
+            PRIMARY KEY(hero_name, dungeon_index),
+            FOREIGN KEY(hero_name) REFERENCES hero(name)
+);
+        
+CREATE TABLE IF NOT EXISTS weapon_type_kills (
+            weapon_name TEXT PRIMARY KEY,
+            kills INTEGER
+);
+        
+CREATE TABLE IF NOT EXISTS hero_weapon_type_kills (
+            hero_name TEXT,
+            weapon_name TEXT,
+            kills INTEGER,
+            PRIMARY KEY(hero_name, weapon_name),
+            FOREIGN KEY(hero_name) REFERENCES hero(name)
+);

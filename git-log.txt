@@ -1,0 +1,103 @@
+commit 3cee741bd1229157e28ad75fb711588ff020b404
+Author: Povl Christiansen <povljunoir5@gmail.com>
+Date:   Mon Jun 2 12:33:29 2025 +0200
+
+    Cmake commit
+
+commit c11e025ac7c44b85f41ffab05a42739fa847902c
+Author: Povl Christiansen <povljunoir5@gmail.com>
+Date:   Mon Jun 2 12:03:48 2025 +0200
+
+    .git commit
+
+commit 9ed3163cbce41aa02532a420c33c585ade22b4d1
+Author: Povl Christiansen <povljunoir5@gmail.com>
+Date:   Fri May 30 14:36:17 2025 +0200
+
+    SQL implemented
+    
+    Everything should run smoothly with the SQLite3 database structure. Dungeon and weapon logic has been updated, but not balanced. Quality of life changes has been made as well. Everything looks as though it fullfils the demands. Awaiting testing
+
+commit 60d1053ce3532b655b2d1bc823dcb4e55dd35326
+Author: Povl Christiansen <povljunoir5@gmail.com>
+Date:   Thu May 29 17:10:29 2025 +0200
+
+    Added weapon class
+    
+    Added the weapon class and made it possible to track how many enemies the hero, and each weapon has defeated.
+
+commit e111fead097f1493644e2a8e987f4d0e87ca620c
+Author: Povl Christiansen <povljunoir5@gmail.com>
+Date:   Thu May 29 13:49:48 2025 +0200
+
+    Save & Load implemented. Dungeon logic updated
+    
+    It is now possible to save between dungeons. Gold is now a part of hero stats. When a dungeon is defeated, it shows in game, and should save in the code as well, and unlock the dragon when all dungeons has been defeated.
+
+commit e52376c13b6a1f092ead10944e7e49b8a99fa0d0
+Author: Povl Christiansen <povljunoir5@gmail.com>
+Date:   Thu May 29 00:03:45 2025 +0200
+
+    Main Updated
+    
+    The Main function now loops within the dungeons and enables you to loop through all of the dungeons
+
+commit ef2fbeaed55acd967b7fc24e44a064779204a296
+Author: Povl Christiansen <povljunoir5@gmail.com>
+Date:   Wed May 28 17:00:34 2025 +0200
+
+    Dungeon class updated
+    
+    Hopefully the class takes level into account now. The main is updated to generate three dungeons successfully
+
+commit 11eace7786bd8d8627140d899b061a355853c678
+Author: Povl Christiansen <povljunoir5@gmail.com>
+Date:   Wed May 28 16:32:10 2025 +0200
+
+    Dungeon Class Added
+
+commit f85f12f20a96cc4ca43489922b22db1cadc78387
+Author: Povl <povljunior5@gmail.com>
+Date:   Thu Apr 24 22:50:43 2025 +0200
+
+    Save and load
+    
+     Created save and load features as well as adjusted the bossfight. Next up: make the attacks a bit random so the game is not the same each time.
+
+commit a18b5356898fc8d46a454dc604da18fcd6bad1b3
+Author: Povl <povljunior5@gmail.com>
+Date:   Tue Apr 15 15:47:20 2025 +0200
+
+    Fighting sequence update
+    
+    Fighting sequence is almost finished. The whole thing is wrapped in a loop, allowing the player to go through the enemies in self-picked order. Created option to check stats of hero, and updated level-up system. Now all that needs is a balance of heroes, dragon fight and SQL implementation.
+
+commit a956cc1a34af4c082dfd57be6d31dae3455b46a7
+Author: Povl <povljunior5@gmail.com>
+Date:   Tue Apr 15 14:14:59 2025 +0200
+
+    Updated UI and fighting sequence
+    
+    Added linespaces between options in UI, to make everyting more readable. The fighting sequence now have a (4 second) timer inbetween actions. A vector has been made to store enemies in, and enemies should be deleted when defeated. The whole enemy interaction should be wrapped in a loop to let the player go through all of the enemies.
+
+commit 4934ad968a548c8b41605f43229c8eb38aa109a5
+Author: Povl <povljunior5@gmail.com>
+Date:   Tue Apr 15 12:40:21 2025 +0200
+
+    Created fighting sequence
+    
+    At the moment it just spams the entire fight. Make it so that there is a timer, and show the health of the hero as well as enemy. The enemy also needs to be placed in an array, so that it can be removed from the list of enemies. There still needs to be a level up system
+
+commit 969cd9757e463b7dfa270e5172d29cc41259999d
+Author: Povl <povljunior5@gmail.com>
+Date:   Mon Apr 14 17:28:24 2025 +0200
+
+    Added Enemy Class
+    
+    This commit also includes a sketchout of a simple menu system
+
+commit c09d18050f2ce266f55ef83ae09b55275378b52d
+Author: Povl <povljunior5@gmail.com>
+Date:   Mon Apr 14 13:29:29 2025 +0200
+
+    Hero Class
